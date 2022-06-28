@@ -3,6 +3,7 @@ import { grid } from "./main";
 export enum CellState {
     "HIDDEN",
     "REVEALED",
+    "FLAG",
 }
 
 class Cell {
@@ -60,12 +61,39 @@ class Cell {
         this.howManyBombsMemoized = count;
     }
     #setupListeners() {
-        this.element.addEventListener("click", (_e) => {
-            this.reveal();
+        let willToggleFlag = false; // will flag be toggled after "pointerup"?; true -> toggle flag; false -> reveal(regular click);
+        let interval: number;
+        this.element.addEventListener("pointerdown", () => {
+            interval = setTimeout(() => {
+                willToggleFlag = true;
+                this.element.classList.toggle("flag"); // only toggle dom class, not the actual state, to indicate that the state will change when user stops holding (makes it look like it has already changed); if it were to toggle the state it could cause bugs eg cell would be revealed every time user tries to "unflag" a cell
+                clearTimeout(interval);
+            }, 500); // how long does the user have to hold to flag
+        });
+        this.element.addEventListener("pointerup", () => {
+            clearTimeout(interval);
+            if (willToggleFlag) this.toggleFlag();
+            else if (this.isBomb) grid.gameOver();
+            else this.reveal();
+            willToggleFlag = false;
         });
     }
+    toggleFlag() {
+        switch (this.state) {
+            case CellState.REVEALED:
+                return;
+            case CellState.FLAG:
+                this.state = CellState.HIDDEN;
+                this.element.classList.remove("flag");
+                break;
+            case CellState.HIDDEN:
+                this.state = CellState.FLAG;
+                this.element.classList.add("flag");
+                break;
+        }
+    }
     reveal() {
-        if (this.state == CellState.REVEALED) return;
+        if (this.state !== CellState.HIDDEN) return;
 
         this.state = CellState.REVEALED;
         // this.element.textContent = this.isBomb ? "b" : "";

@@ -40,11 +40,16 @@ class Grid {
         }
         this.makeBombs();
     }
+    gameOver() {
+        this.grid.flat().forEach((x) => {
+            x.reveal();
+        });
+        alert("Game over");
+    }
     makeBombs() {
         for (let i = 0; i < this.bombCount; i++) {
             const x = Math.floor(Math.random() * this.columns);
             const y = Math.floor(Math.random() * this.rows);
-            console.log(x, y);
             this.grid[y][x].isBomb = true;
         }
     }
