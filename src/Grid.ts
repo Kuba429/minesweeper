@@ -13,7 +13,7 @@ class Grid {
         this.element = element;
         this.columns = dimensions?.columns ?? 9;
         this.rows = dimensions?.rows ?? 9;
-        this.bombCount = 2;
+        this.bombCount = 10;
         this.grid = [];
         this.setup();
         this.drawGrid();
@@ -37,6 +37,15 @@ class Grid {
             for (let j = 0; j < this.columns; j++) {
                 this.grid[i].push(new Cell({ x: j, y: i }));
             }
+        }
+        this.makeBombs();
+    }
+    makeBombs() {
+        for (let i = 0; i < this.bombCount; i++) {
+            const x = Math.floor(Math.random() * this.columns);
+            const y = Math.floor(Math.random() * this.rows);
+            console.log(x, y);
+            this.grid[y][x].isBomb = true;
         }
     }
     drawGrid() {
