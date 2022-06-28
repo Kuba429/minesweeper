@@ -1,3 +1,4 @@
+import { GameResult } from "./Grid";
 import { grid } from "./main";
 
 export enum CellState {
@@ -40,10 +41,8 @@ class Cell {
             neighbours.push(grid.grid[this.y - 1][this.x - 1]); // up left
         if (this.y > 0 && this.x < grid.columns - 1)
             neighbours.push(grid.grid[this.y - 1][this.x + 1]); // up right
-
         if (this.y < grid.rows - 1 && this.x > 0)
             neighbours.push(grid.grid[this.y + 1][this.x - 1]); // down left
-
         if (this.y < grid.rows - 1 && this.x < grid.columns - 1)
             neighbours.push(grid.grid[this.y + 1][this.x + 1]); // down right
         this.neighboursMemoized = neighbours;
@@ -62,19 +61,19 @@ class Cell {
     }
     #setupListeners() {
         let willToggleFlag = false; // will flag be toggled after "pointerup"?; true -> toggle flag; false -> reveal(regular click);
-        let interval: number;
-        this.element.addEventListener("pointerdown", () => {
-            interval = setTimeout(() => {
+        let timeout: number;
+        this.element.addEventListener("pointerdown", (e) => {
+            e.preventDefault();
+            timeout = setTimeout(() => {
                 willToggleFlag = true;
                 this.element.classList.toggle("flag"); // only toggle dom class, not the actual state, to indicate that the state will change when user stops holding (makes it look like it has already changed); if it were to toggle the state it could cause bugs eg cell would be revealed every time user tries to "unflag" a cell
-                clearTimeout(interval);
             }, 500); // how long does the user have to hold to flag
         });
-        this.element.addEventListener("pointerup", () => {
-            clearTimeout(interval);
+        this.element.addEventListener("pointerup", (e) => {
+            e.preventDefault();
+            clearTimeout(timeout);
             if (willToggleFlag) this.toggleFlag();
-            else if (this.isBomb) grid.gameOver();
-            else this.reveal();
+            else this.click();
             willToggleFlag = false;
         });
     }
@@ -84,22 +83,27 @@ class Cell {
                 return;
             case CellState.FLAG:
                 this.state = CellState.HIDDEN;
-                this.element.classList.remove("flag");
+                this.element.classList.remove("flag"); // not toggle because appropriate class will likely already be there (see #setupListeners, "pointerdown" event handler)
+                grid.flaggedCount++;
                 break;
             case CellState.HIDDEN:
                 this.state = CellState.FLAG;
                 this.element.classList.add("flag");
+                grid.flaggedCount--;
                 break;
         }
     }
+    click() {
+        // what you think would happen when you click a cell
+        if (this.isBomb) grid.gameOver(GameResult.LOSE);
+        else this.reveal();
+    }
     reveal() {
         if (this.state !== CellState.HIDDEN) return;
-
+        grid.hiddenCount--;
         this.state = CellState.REVEALED;
-        // this.element.textContent = this.isBomb ? "b" : "";
         this.element.classList.add("revealed");
         this.isBomb && this.element.classList.add("bomb");
-
         if (this.howManyBombs > 0) {
             this.element.textContent = this.howManyBombs.toString();
         } else {
@@ -107,6 +111,7 @@ class Cell {
                 cell.reveal();
             });
         }
+        if (!grid.isOver) grid.checkWin();
     }
 }
 export default Cell;
