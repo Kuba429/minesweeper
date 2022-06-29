@@ -57,8 +57,9 @@ class Grid {
         alert(result);
     }
     checkWin() {
-        if (this.hiddenCount === 0) this.gameOver(GameResult.WIN);
-        if (this.bombCount !== this.bombCount) return;
+        console.log(`bombs: ${this.bombCount}  flags: ${this.flaggedCount}`);
+        if (this.hiddenCount === 0) this.gameOver(GameResult.WIN); // win if there are no hidden elements left
+        if (this.flaggedCount !== this.bombCount) return; // possible win if every bomb is flagged
         let bombsLeft = this.bombCount;
         this.grid.flat().forEach((cell) => {
             if (cell.state == CellState.FLAG) {

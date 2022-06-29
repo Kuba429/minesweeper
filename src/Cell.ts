@@ -66,7 +66,8 @@ class Cell {
             e.preventDefault();
             timeout = setTimeout(() => {
                 willToggleFlag = true;
-                this.element.classList.toggle("flag"); // only toggle dom class, not the actual state, to indicate that the state will change when user stops holding (makes it look like it has already changed); if it were to toggle the state it could cause bugs eg cell would be revealed every time user tries to "unflag" a cell
+                this.state !== CellState.REVEALED &&
+                    this.element.classList.toggle("flag"); // only toggle dom class, not the actual state, to indicate that the state will change when user stops holding (makes it look like it has already changed); if it were to toggle the state it could cause bugs eg cell would be revealed every time user tries to "unflag" a cell
             }, 500); // how long does the user have to hold to flag
         });
         this.element.addEventListener("pointerup", (e) => {
@@ -76,6 +77,12 @@ class Cell {
             else this.click();
             willToggleFlag = false;
         });
+        this.element.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+            willToggleFlag = true;
+            this.state !== CellState.REVEALED &&
+                this.element.classList.toggle("flag");
+        });
     }
     toggleFlag() {
         switch (this.state) {
@@ -83,15 +90,16 @@ class Cell {
                 return;
             case CellState.FLAG:
                 this.state = CellState.HIDDEN;
+                grid.flaggedCount--;
                 this.element.classList.remove("flag"); // not toggle because appropriate class will likely already be there (see #setupListeners, "pointerdown" event handler)
-                grid.flaggedCount++;
                 break;
             case CellState.HIDDEN:
                 this.state = CellState.FLAG;
                 this.element.classList.add("flag");
-                grid.flaggedCount--;
+                grid.flaggedCount++;
                 break;
         }
+        grid.checkWin();
     }
     click() {
         // what you think would happen when you click a cell
@@ -99,7 +107,7 @@ class Cell {
         else this.reveal();
     }
     reveal() {
-        if (this.state !== CellState.HIDDEN) return;
+        if (this.state == CellState.REVEALED) return;
         grid.hiddenCount--;
         this.state = CellState.REVEALED;
         this.element.classList.add("revealed");
