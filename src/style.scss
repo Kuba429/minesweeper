@@ -1,24 +1,40 @@
-#app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
+$background: #1c1c1c;
+$revealed: #2c2c2c;
+$flag: #f05454;
+$bomb: #30475e;
+body {
+    font-family: monospace;
+    background-color: $background;
+}
+.grid-wrapper {
+    // this wrapper is necessary because border radius + overflow hidden on #grid would cause cells on corners to be rounded differently than the grid itself (assuming there is padding on #grid which i want there to be); #grid rounds all corners and then this wrapper applies border with appropriate radius to look natural
+    width: fit-content;
+    border-radius: 6px;
+    border: 1px $flag solid;
+    padding: 2px;
 }
 #grid {
+    border-radius: 5px;
+    overflow: hidden;
+    background: $background;
     width: fit-content;
-    border: black 1px solid;
+    gap: 2px;
 }
 .cell {
+    box-sizing: border-box;
+    position: relative;
     transition: ease all 0.3s;
     $size: 50px;
     width: $size;
     height: $size;
-    -webkit-user-select: none; /* Chrome all / Safari all */
-    -moz-user-select: none; /* Firefox all */
-    -ms-user-select: none; /* IE 10+ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     user-select: none;
+    color: $background;
     &::after {
         content: "";
         width: 10px;
@@ -32,14 +48,14 @@
     }
 }
 .revealed {
-    background: gray;
+    background: $revealed;
+    color: #a0a0a1;
 }
 .bomb {
-    background: black;
+    background: $bomb;
 }
 .flag {
-    position: relative;
     &::after {
-        background: blue;
+        background: $flag;
     }
 }

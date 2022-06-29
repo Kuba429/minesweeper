@@ -20,7 +20,7 @@ class Cell {
         this.y = position.y;
         this.isBomb = false;
         this.state = CellState.HIDDEN;
-        this.element = document.createElement("button");
+        this.element = document.createElement("div");
         this.element.classList.add("cell");
         // this.element.textContent = `${this.x},${this.y}`;
         this.#setupListeners();
