@@ -52,7 +52,8 @@ class Grid {
         const bombPercentage =
             (settings.get("bombs")! as unknown as number) * 0.01;
         this.bombCount = Math.round(this.columns * this.rows * bombPercentage);
-        console.log(this.bombCount);
+        this.hiddenCount = this.columns * this.rows;
+        this.flaggedCount = 0;
         this.element.style.display = "grid";
         this.element.style.gridTemplateRows = `repeat(${this.rows}, 1fr)`;
         this.element.style.gridTemplateColumns = `repeat(${this.columns}, 1fr)`;
@@ -61,6 +62,7 @@ class Grid {
     }
     start() {
         this.isOver = false;
+        this.resultElement.classList.remove("game-over");
         this.makeBombs();
     }
     gameOver(result: GameResult) {
