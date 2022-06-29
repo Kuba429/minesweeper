@@ -115,9 +115,11 @@ class Cell {
         if (this.howManyBombs > 0) {
             this.element.textContent = this.howManyBombs.toString();
         } else {
-            this.neighbours.forEach((cell) => {
-                cell.reveal();
-            });
+            setTimeout(() => {
+                this.neighbours.forEach((cell) => {
+                    cell.reveal();
+                });
+            }, 5);
         }
         if (!grid.isOver) grid.checkWin();
     }
