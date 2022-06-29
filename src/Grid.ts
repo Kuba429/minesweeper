@@ -44,6 +44,15 @@ class Grid {
         e?.preventDefault();
         // reset everything
         this.isOver = true;
+        // apply settings
+        const settings = new FormData(this.settingsElement);
+        this.columns = settings.get("columns")! as unknown as number;
+        this.rows = settings.get("rows")! as unknown as number;
+
+        const bombPercentage =
+            (settings.get("bombs")! as unknown as number) * 0.01;
+        this.bombCount = Math.round(this.columns * this.rows * bombPercentage);
+        console.log(this.bombCount);
         this.element.style.display = "grid";
         this.element.style.gridTemplateRows = `repeat(${this.rows}, 1fr)`;
         this.element.style.gridTemplateColumns = `repeat(${this.columns}, 1fr)`;

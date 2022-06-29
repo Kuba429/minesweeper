@@ -22,6 +22,19 @@
         <p>Hold or right-click to flag</p>
         <form id="settings">
             <button class="play-again">Play again</button>
+            <label>
+                Columns
+                <input value="9" type="range" min="2" max="30" name="columns" />
+            </label>
+            <label>
+                Rows
+                <input value="9" type="range" min="2" max="30" name="rows" />
+            </label>
+            <label>
+                Bombs (%)
+                <input value="30" type="range" min="1" max="70" name="bombs" />
+                <!-- % of bombs -->
+            </label>
         </form>
         <script type="module" src="/src/main.ts"></script>
     </body>

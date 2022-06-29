@@ -24,7 +24,18 @@ p {
         opacity: 100%;
     }
 }
+#settings {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    width: fit-content;
+    margin: auto;
+    gap: 1rem;
+}
 button.play-again {
+    width: fit-content;
+    align-self: center;
     cursor: pointer;
     position: relative;
     background: $flag;
