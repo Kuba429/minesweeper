@@ -1,10 +1,25 @@
 $background: #1c1c1c;
 $revealed: #2c2c2c;
+$text: #a0a0a1;
 $flag: #f05454;
 $bomb: #30475e;
 body {
-    font-family: monospace;
+    font-family: "Trispace", sans-serif;
     background-color: $background;
+    color: $text;
+}
+h1,
+h3 {
+    font-weight: normal;
+    text-align: center;
+}
+.result {
+    transition: ease color 0.3s;
+    animation-delay: 0.3s;
+    color: transparent;
+}
+.result.game-over {
+    color: inherit;
 }
 .grid-wrapper {
     // this wrapper is necessary because border radius + overflow hidden on #grid would cause cells on corners to be rounded differently than the grid itself (assuming there is padding on #grid which i want there to be); #grid rounds all corners and then this wrapper applies border with appropriate radius to look natural
@@ -12,6 +27,7 @@ body {
     border-radius: 6px;
     border: 1px $flag solid;
     padding: 2px;
+    margin: auto;
 }
 #grid {
     border-radius: 5px;
@@ -34,7 +50,6 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    color: $background;
     &::after {
         content: "";
         width: 10px;
@@ -49,7 +64,6 @@ body {
 }
 .revealed {
     background: $revealed;
-    color: #a0a0a1;
 }
 .bomb {
     background: $bomb;

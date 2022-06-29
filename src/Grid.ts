@@ -5,6 +5,7 @@ export enum GameResult {
 }
 class Grid {
     element: HTMLElement;
+    resultElement: HTMLElement;
     columns: number;
     bombCount: number;
     flaggedCount: number;
@@ -17,6 +18,7 @@ class Grid {
         dimensions?: { columns?: number; rows?: number }
     ) {
         this.element = element;
+        this.resultElement = document.querySelector(".result")!;
         this.columns = dimensions?.columns ?? 9;
         this.rows = dimensions?.rows ?? 9;
         this.hiddenCount = this.columns * this.rows;
@@ -54,7 +56,8 @@ class Grid {
         this.grid.flat().forEach((x) => {
             x.reveal();
         });
-        alert(result);
+        this.resultElement.textContent = result;
+        this.resultElement.classList.add("game-over");
     }
     checkWin() {
         console.log(`bombs: ${this.bombCount}  flags: ${this.flaggedCount}`);
