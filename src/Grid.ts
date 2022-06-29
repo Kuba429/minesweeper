@@ -6,6 +6,7 @@ export enum GameResult {
 class Grid {
     element: HTMLElement;
     resultElement: HTMLElement;
+    settingsElement: HTMLFormElement;
     columns: number;
     bombCount: number;
     flaggedCount: number;
@@ -19,6 +20,7 @@ class Grid {
     ) {
         this.element = element;
         this.resultElement = document.querySelector(".result")!;
+        this.settingsElement = document.querySelector("#settings")!;
         this.columns = dimensions?.columns ?? 9;
         this.rows = dimensions?.rows ?? 9;
         this.hiddenCount = this.columns * this.rows;
@@ -27,28 +29,29 @@ class Grid {
         this.flaggedCount = 0;
         this.grid = [];
         this.setup();
-        this.drawGrid();
+        this.settingsElement.addEventListener("input", (e) => this.setup(e));
+        this.settingsElement.addEventListener("submit", (e) => this.setup(e)); // must invoke with lambda, otherwise setup method can't access 'this'
     }
     setColumns(cols: number) {
         this.columns = cols;
-        this.setup();
+        this.start();
     }
     setRows(rows: number) {
         this.rows = rows;
-        this.setup();
+        this.start();
     }
-    setup() {
+    setup(e?: Event) {
+        e?.preventDefault();
+        // reset everything
+        this.isOver = true;
         this.element.style.display = "grid";
         this.element.style.gridTemplateRows = `repeat(${this.rows}, 1fr)`;
         this.element.style.gridTemplateColumns = `repeat(${this.columns}, 1fr)`;
-        // fill grid with cells
-        this.grid = [];
-        for (let i = 0; i < this.rows; i++) {
-            this.grid.push([]);
-            for (let j = 0; j < this.columns; j++) {
-                this.grid[i].push(new Cell({ x: j, y: i }));
-            }
-        }
+        this.makeGrid();
+        this.start();
+    }
+    start() {
+        this.isOver = false;
         this.makeBombs();
     }
     gameOver(result: GameResult) {
@@ -60,7 +63,7 @@ class Grid {
         this.resultElement.classList.add("game-over");
     }
     checkWin() {
-        console.log(`bombs: ${this.bombCount}  flags: ${this.flaggedCount}`);
+        console.log(`bombs: ${this.bombCount} flags: ${this.flaggedCount}`);
         if (this.hiddenCount === 0) this.gameOver(GameResult.WIN); // win if there are no hidden elements left
         if (this.flaggedCount !== this.bombCount) return; // possible win if every bomb is flagged
         let bombsLeft = this.bombCount;
@@ -80,7 +83,14 @@ class Grid {
         }
         this.hiddenCount -= this.bombCount;
     }
-    drawGrid() {
+    makeGrid() {
+        this.grid = [];
+        for (let i = 0; i < this.rows; i++) {
+            this.grid.push([]);
+            for (let j = 0; j < this.columns; j++) {
+                this.grid[i].push(new Cell({ x: j, y: i }));
+            }
+        }
         const fragment = document.createDocumentFragment();
         this.grid.forEach((row) => {
             row.forEach((cell) => {

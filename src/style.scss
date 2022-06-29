@@ -6,12 +6,43 @@ $bomb: #30475e;
 body {
     font-family: "Trispace", sans-serif;
     background-color: $background;
+    text-align: center;
     color: $text;
+}
+h1 {
+    margin-top: 2rem;
 }
 h1,
 h3 {
     font-weight: normal;
     text-align: center;
+}
+p {
+    opacity: 50%;
+    transition: ease opacity 0.3s;
+    &:hover {
+        opacity: 100%;
+    }
+}
+button.play-again {
+    cursor: pointer;
+    position: relative;
+    background: $flag;
+    border: 1px solid $flag;
+    color: white;
+    border-radius: 5px;
+    padding: 0.6rem 1rem;
+    box-sizing: content-box;
+    font-family: inherit;
+    font-size: 1.4rem;
+    overflow: hidden;
+    transition-property: background, color;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+    &:hover {
+        background: $background;
+        color: $flag;
+    }
 }
 .result {
     transition: ease color 0.3s;
