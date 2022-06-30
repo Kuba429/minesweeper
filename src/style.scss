@@ -4,114 +4,128 @@ $text: #a0a0a1;
 $flag: #f05454;
 $bomb: #30475e;
 body {
-    font-family: "Trispace", sans-serif;
-    background-color: $background;
-    text-align: center;
-    color: $text;
+	font-family: "Trispace", sans-serif;
+	background-color: $background;
+	text-align: center;
+	color: $text;
 }
 h1 {
-    margin-top: 2rem;
+	margin-top: 2rem;
 }
 h1,
 h3 {
-    font-weight: normal;
-    text-align: center;
+	font-weight: normal;
+	text-align: center;
 }
 p {
-    opacity: 50%;
-    transition: ease opacity 0.3s;
-    &:hover {
-        opacity: 100%;
-    }
+	opacity: 50%;
+	transition: ease opacity 0.3s;
+	&:hover {
+		opacity: 100%;
+	}
 }
 #settings {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: start;
-    width: fit-content;
-    margin: auto;
-    gap: 1rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: start;
+	width: fit-content;
+	margin: auto;
+	gap: 1rem;
 }
 button.play-again {
-    width: fit-content;
-    align-self: center;
-    cursor: pointer;
-    position: relative;
-    background: $flag;
-    border: 1px solid $flag;
-    color: white;
-    border-radius: 5px;
-    padding: 0.6rem 1rem;
-    box-sizing: content-box;
-    font-family: inherit;
-    font-size: 1.4rem;
-    overflow: hidden;
-    transition-property: background, color;
-    transition-duration: 0.3s;
-    transition-timing-function: ease;
-    &:hover {
-        background: $background;
-        color: $flag;
-    }
+	width: fit-content;
+	align-self: center;
+	cursor: pointer;
+	position: relative;
+	background: $flag;
+	border: 1px solid $flag;
+	color: white;
+	border-radius: 5px;
+	padding: 0.6rem 1rem;
+	box-sizing: content-box;
+	font-family: inherit;
+	font-size: 1.4rem;
+	overflow: hidden;
+	transition-property: background, color;
+	transition-duration: 0.3s;
+	transition-timing-function: ease;
+	&:hover {
+		background: $background;
+		color: $flag;
+	}
 }
 .result {
-    transition: ease color 0.3s;
-    animation-delay: 0.3s;
-    color: transparent;
+	transition: ease color 0.3s;
+	animation-delay: 0.3s;
+	color: transparent;
 }
 .result.game-over {
-    color: inherit;
+	color: inherit;
 }
 .grid-wrapper {
-    // this wrapper is necessary because border radius + overflow hidden on #grid would cause cells on corners to be rounded differently than the grid itself (assuming there is padding on #grid which i want there to be); #grid rounds all corners and then this wrapper applies border with appropriate radius to look natural
-    width: fit-content;
-    border-radius: 6px;
-    border: 1px $flag solid;
-    padding: 2px;
-    margin: auto;
+	// this wrapper is necessary because border radius + overflow hidden on #grid would cause cells on corners to be rounded differently than the grid itself (assuming there is padding on #grid which i want there to be); #grid rounds all corners and then this wrapper applies border with appropriate radius to look natural
+	width: fit-content;
+	border-radius: 6px;
+	border: 1px $flag solid;
+	padding: 2px;
+	margin: auto;
 }
 #grid {
-    border-radius: 5px;
-    overflow: hidden;
-    background: $background;
-    width: fit-content;
-    gap: 2px;
+	border-radius: 5px;
+	overflow: hidden;
+	background: $background;
+	width: fit-content;
+	gap: 2px;
 }
 .cell {
-    box-sizing: border-box;
-    position: relative;
-    transition: ease all 0.3s;
-    $size: 50px;
-    width: $size;
-    height: $size;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    &::after {
-        content: "";
-        width: 10px;
-        height: 10px;
-        background: transparent;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        transition: ease all 0.3s;
-    }
+	box-sizing: border-box;
+	position: relative;
+	transition: ease all 0.3s;
+	$size: 50px;
+	width: $size;
+	height: $size;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	&::after,
+	&::before {
+		content: "";
+		color: $text;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background: transparent;
+		position: absolute;
+		transition: ease all 0.3s;
+	}
 }
 .revealed {
-    background: $revealed;
+	background: $revealed;
 }
 .bomb {
-    background: $bomb;
+	background: $bomb;
+	position: relative;
+	color: transparent;
+	&::before {
+		content: "💣";
+	}
 }
 .flag {
-    &::after {
-        background: $flag;
-    }
+	&::after {
+		content: "🚩";
+	}
+}
+.flag.bomb {
+	&::after {
+		// move flag to top right corner to make bomb visible
+		justify-content: flex-end;
+		align-items: flex-start;
+	}
 }
