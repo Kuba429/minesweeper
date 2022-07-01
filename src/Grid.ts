@@ -25,7 +25,7 @@ class Grid {
 		this.rows = dimensions?.rows ?? 9;
 		this.hiddenCount = this.columns * this.rows;
 		this.bombCount = Math.round(Math.sqrt(this.columns * this.rows));
-		this.isOver = false;
+		this.isOver = true;
 		this.flaggedCount = 0;
 		this.grid = [];
 		this.setup();
@@ -58,12 +58,12 @@ class Grid {
 		this.element.style.gridTemplateRows = `repeat(${this.rows}, 1fr)`;
 		this.element.style.gridTemplateColumns = `repeat(${this.columns}, 1fr)`;
 		this.makeGrid();
-		this.start();
 	}
-	start() {
+	start(ignore?: { x: number; y: number }) {
+		// ignore prop to make sure the first cell clicked isn't a bomb
 		this.isOver = false;
 		this.resultElement.classList.remove("game-over");
-		this.makeBombs();
+		this.makeBombs(ignore);
 	}
 	gameOver(result: GameResult) {
 		this.isOver = true;
@@ -85,10 +85,16 @@ class Grid {
 		});
 		bombsLeft === 0 && this.gameOver(GameResult.WIN);
 	}
-	makeBombs() {
+	makeBombs(ignore?: { x: number; y: number }) {
 		for (let i = 0; i < this.bombCount; i++) {
+			console.log(i);
 			const x = Math.floor(Math.random() * this.columns);
 			const y = Math.floor(Math.random() * this.rows);
+			if (ignore && ignore?.x == x && ignore?.y == y) {
+				// skip this iteration if x and y are x and y of the cell that's been clicked first
+				i -= 1;
+				continue;
+			}
 			this.grid[y][x].isBomb = true;
 		}
 		this.hiddenCount -= this.bombCount;
