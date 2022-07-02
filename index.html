@@ -1,41 +1,41 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-        <title>Vite App</title>
-        <!-- font -->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Trispace:wght@400;700&display=swap"
-            rel="stylesheet"
-        />
-    </head>
-    <body>
-        <h1>Minesweeper</h1>
-        <!-- not empty so height won't change when result appears -->
-        <h3 class="result">x</h3>
-        <div class="grid-wrapper">
-            <div id="grid"></div>
-        </div>
-        <p>Hold or right-click to flag</p>
-        <form id="settings">
-            <button class="play-again">Play again</button>
-            <label>
-                Columns
-                <input value="9" type="range" min="2" max="30" name="columns" />
-            </label>
-            <label>
-                Rows
-                <input value="9" type="range" min="2" max="30" name="rows" />
-            </label>
-            <label>
-                Bombs (%)
-                <input value="20" type="range" min="1" max="70" name="bombs" />
-                <!-- % of bombs -->
-            </label>
-        </form>
-        <script type="module" src="/src/main.ts"></script>
-    </body>
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="icon" href="favicon.ico" />
+		<title>Minesweeper</title>
+		<!-- font -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Trispace:wght@400;700&display=swap"
+			rel="stylesheet"
+		/>
+	</head>
+	<body>
+		<h1>Minesweeper</h1>
+		<!-- not empty so height won't change when result appears -->
+		<h3 class="result">x</h3>
+		<div class="grid-wrapper">
+			<div id="grid"></div>
+		</div>
+		<p>Hold or right-click to flag</p>
+		<form id="settings">
+			<button class="play-again">Play again</button>
+			<label>
+				Columns
+				<input value="9" type="range" min="2" max="30" name="columns" />
+			</label>
+			<label>
+				Rows
+				<input value="9" type="range" min="2" max="30" name="rows" />
+			</label>
+			<label>
+				Bombs (%)
+				<input value="20" type="range" min="1" max="70" name="bombs" />
+				<!-- % of bombs -->
+			</label>
+		</form>
+		<script type="module" src="/src/main.ts"></script>
+	</body>
 </html>
