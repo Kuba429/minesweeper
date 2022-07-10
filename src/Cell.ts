@@ -64,7 +64,7 @@ class Cell {
 		let timeout: number;
 		this.element.addEventListener("pointerdown", (e) => {
 			e.preventDefault();
-			timeout = setTimeout(() => {
+			timeout = window.setTimeout(() => {
 				willToggleFlag = true;
 				this.state !== CellState.REVEALED &&
 					this.element.classList.toggle("flag"); // only toggle dom class, not the actual state, to indicate that the state will change when user stops holding (makes it look like it has already changed); if it were to toggle the state it could cause bugs eg cell would be revealed every time user tries to "unflag" a cell
@@ -72,7 +72,7 @@ class Cell {
 		});
 		this.element.addEventListener("pointerup", (e) => {
 			e.preventDefault();
-			clearTimeout(timeout);
+			window.clearTimeout(timeout);
 			if (willToggleFlag) this.toggleFlag();
 			else this.click();
 
