@@ -104,7 +104,7 @@ class Grid {
 		for (let i = 0; i < this.rows; i++) {
 			this.grid.push([]);
 			for (let j = 0; j < this.columns; j++) {
-				this.grid[i].push(new Cell({ x: j, y: i }));
+				this.grid[i].push(new Cell({ x: j, y: i }, this));
 			}
 		}
 		const fragment = document.createDocumentFragment();

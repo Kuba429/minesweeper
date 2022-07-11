@@ -1,5 +1,4 @@
-import { GameResult } from "./Grid";
-import { grid } from "./main";
+import Grid, { GameResult } from "./Grid";
 
 export enum CellState {
 	"HIDDEN",
@@ -10,14 +9,16 @@ export enum CellState {
 class Cell {
 	x: number;
 	y: number;
+	parent: Grid;
 	state: CellState;
 	isBomb: boolean;
 	element: HTMLElement;
 	neighboursMemoized?: Array<Cell>;
 	howManyBombsMemoized?: number;
-	constructor(position: { x: number; y: number }) {
+	constructor(position: { x: number; y: number }, parent: Grid) {
 		this.x = position.x;
 		this.y = position.y;
+		this.parent = parent;
 		this.isBomb = false;
 		this.state = CellState.HIDDEN;
 		this.element = document.createElement("div");
@@ -31,20 +32,20 @@ class Cell {
 	}
 	#getNeighbours() {
 		const neighbours: Array<Cell> = [];
-		if (this.y > 0) neighbours.push(grid.grid[this.y - 1][this.x]); // up
-		if (this.y < grid.rows - 1)
-			neighbours.push(grid.grid[this.y + 1][this.x]); // down
-		if (this.x > 0) neighbours.push(grid.grid[this.y][this.x - 1]); // left
-		if (this.x < grid.columns - 1)
-			neighbours.push(grid.grid[this.y][this.x + 1]); // right
+		if (this.y > 0) neighbours.push(this.parent.grid[this.y - 1][this.x]); // up
+		if (this.y < this.parent.rows - 1)
+			neighbours.push(this.parent.grid[this.y + 1][this.x]); // down
+		if (this.x > 0) neighbours.push(this.parent.grid[this.y][this.x - 1]); // left
+		if (this.x < this.parent.columns - 1)
+			neighbours.push(this.parent.grid[this.y][this.x + 1]); // right
 		if (this.y > 0 && this.x > 0)
-			neighbours.push(grid.grid[this.y - 1][this.x - 1]); // up left
-		if (this.y > 0 && this.x < grid.columns - 1)
-			neighbours.push(grid.grid[this.y - 1][this.x + 1]); // up right
-		if (this.y < grid.rows - 1 && this.x > 0)
-			neighbours.push(grid.grid[this.y + 1][this.x - 1]); // down left
-		if (this.y < grid.rows - 1 && this.x < grid.columns - 1)
-			neighbours.push(grid.grid[this.y + 1][this.x + 1]); // down right
+			neighbours.push(this.parent.grid[this.y - 1][this.x - 1]); // up left
+		if (this.y > 0 && this.x < this.parent.columns - 1)
+			neighbours.push(this.parent.grid[this.y - 1][this.x + 1]); // up right
+		if (this.y < this.parent.rows - 1 && this.x > 0)
+			neighbours.push(this.parent.grid[this.y + 1][this.x - 1]); // down left
+		if (this.y < this.parent.rows - 1 && this.x < this.parent.columns - 1)
+			neighbours.push(this.parent.grid[this.y + 1][this.x + 1]); // down right
 		this.neighboursMemoized = neighbours;
 	}
 	get howManyBombs() {
@@ -91,28 +92,31 @@ class Cell {
 				return;
 			case CellState.FLAG:
 				this.state = CellState.HIDDEN;
-				grid.flaggedCount--;
+				this.parent.flaggedCount--;
 				this.element.classList.remove("flag"); // not toggle because appropriate class will likely already be there (see #setupListeners, "pointerdown" event handler)
 				break;
 			case CellState.HIDDEN:
 				this.state = CellState.FLAG;
 				this.element.classList.add("flag");
-				grid.flaggedCount++;
+				this.parent.flaggedCount++;
 				break;
 		}
-		grid.checkWin();
+		this.parent.checkWin();
 	}
 	click() {
 		// what you think would happen when you clicked a cell
-		if (grid.isOver && grid.hiddenCount === grid.columns * grid.rows) {
-			grid.start({ x: this.x, y: this.y });
+		if (
+			this.parent.isOver &&
+			this.parent.hiddenCount === this.parent.columns * this.parent.rows
+		) {
+			this.parent.start({ x: this.x, y: this.y });
 		}
-		if (this.isBomb) grid.gameOver(GameResult.LOSE);
+		if (this.isBomb) this.parent.gameOver(GameResult.LOSE);
 		else this.reveal();
 	}
 	reveal() {
 		if (this.state == CellState.REVEALED) return;
-		grid.hiddenCount--;
+		this.parent.hiddenCount--;
 		this.state = CellState.REVEALED;
 		this.element.classList.add("revealed");
 		this.isBomb && this.element.classList.add("bomb");
@@ -125,7 +129,7 @@ class Cell {
 				});
 			}, 5);
 		}
-		if (!grid.isOver) grid.checkWin();
+		if (!this.parent.isOver) this.parent.checkWin();
 	}
 }
 export default Cell;
