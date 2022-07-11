@@ -87,7 +87,6 @@ class Grid {
 	}
 	makeBombs(ignore?: { x: number; y: number }) {
 		for (let i = 0; i < this.bombCount; i++) {
-			console.log(i);
 			const x = Math.floor(Math.random() * this.columns);
 			const y = Math.floor(Math.random() * this.rows);
 			if (ignore && ignore?.x == x && ignore?.y == y) {
